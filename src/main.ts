@@ -9,8 +9,19 @@ import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { baseUrlInterceptor } from "./app/interceptors/base-url.interceptor";
 import { authInterceptor } from "./app/interceptors/auth.interceptor";
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import { provideSignalFormsConfig, SignalFormsConfig } from "@angular/forms/signals";
 
 defineCustomElements(window);
+
+export const NG_STATUS_CLASSES: SignalFormsConfig['classes'] = {
+  'ng-touched': ({ state }) => state().touched(),
+  'ng-untouched': ({ state }) => !state().touched(),
+  'ng-dirty': ({ state }) => state().dirty(),
+  'ng-pristine': ({ state }) => !state().dirty(),
+  'ng-valid': ({ state }) => state().valid(),
+  'ng-invalid': ({ state }) => state().invalid(),
+  'ng-pending': ({ state }) => state().pending(),
+};
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -18,5 +29,8 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideHttpClient(withInterceptors([baseUrlInterceptor, authInterceptor])),
     provideRouter(routes, withPreloading(PreloadAllModules)),
+    provideSignalFormsConfig({
+      classes: NG_STATUS_CLASSES,
+    }),
   ],
 });

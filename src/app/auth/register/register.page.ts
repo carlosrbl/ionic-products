@@ -1,27 +1,33 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import {
-  IonRouterLink,
-  ToastController,
-  NavController,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
+  email,
+  form,
+  FormField,
+  minLength,
+  required,
+  validate,
+} from '@angular/forms/signals';
+import { RouterLink } from '@angular/router';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import {
+  IonButton,
+  IonCol,
   IonContent,
-  IonList,
-  IonItem,
-  IonInput,
+  IonGrid,
+  IonHeader,
   IonIcon,
   IonImg,
-  IonButton,
-  IonGrid,
-  IonRow,
-  IonCol,
+  IonInput,
+  IonItem,
   IonLabel,
+  IonList,
+  IonRouterLink,
+  IonRow,
+  IonTitle,
+  IonToolbar,
+  NavController,
+  ToastController,
 } from '@ionic/angular/standalone';
-import { User } from '../interfaces/user';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ValueEquals } from 'src/app/validators/value-equals';
 import { Auth } from '../services/auth.service';
 
@@ -31,10 +37,9 @@ import { Auth } from '../services/auth.service';
   styleUrls: ['./register.page.scss'],
   standalone: true,
   imports: [
-    FormsModule,
+    FormField,
     RouterLink,
     IonRouterLink,
-    ValueEquals,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -52,21 +57,42 @@ import { Auth } from '../services/auth.service';
   ],
 })
 export class RegisterPage {
-  user: User = {
+  userModel = signal({
     name: '',
     password: '',
+    password2: '',
     email: '',
     avatar: '',
-  };
-  password2 = '';
+  });
+
+  userForm = form(this.userModel, (schema) => {
+    required(schema.name);
+    required(schema.password);
+    required(schema.password2);
+    required(schema.email);
+    required(schema.avatar);
+    minLength(schema.password, 4);
+
+    email(schema.email);
+    validate(schema.password2, ({ value, valueOf }) => {
+      const password = valueOf(schema.password);
+      if (value() !== password) {
+        return {
+          kind: 'sameAs',
+          message: 'Passwords are not equal',
+        };
+      }
+      return null;
+    });
+  });
 
   #authService = inject(Auth);
   #toastCtrl = inject(ToastController);
   #nav = inject(NavController);
   #changeDetector = inject(ChangeDetectorRef);
 
-  register() {
-    this.#authService.register(this.user).subscribe(async () => {
+  register(event: Event) {
+    this.#authService.register(this.userModel()).subscribe(async () => {
       (
         await this.#toastCtrl.create({
           duration: 3000,
@@ -88,7 +114,7 @@ export class RegisterPage {
       resultType: CameraResultType.DataUrl, // Base64 (url encoded)
     });
 
-    this.user.avatar = photo.dataUrl as string;
+    this.userForm.avatar().setControlValue(photo.dataUrl as string);
     this.#changeDetector.markForCheck();
   }
 
@@ -101,7 +127,7 @@ export class RegisterPage {
       resultType: CameraResultType.DataUrl, // Base64 (url encoded)
     });
 
-    this.user.avatar = photo.dataUrl as string;
+    this.userForm.avatar().setControlValue(photo.dataUrl as string);
     this.#changeDetector.markForCheck();
   }
 }

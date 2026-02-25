@@ -3,9 +3,9 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { IonApp, IonAvatar, IonContent, IonIcon, IonImg, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterLink, IonRouterOutlet, IonSplitPane, Platform } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { arrowUndoCircle, camera, checkmarkCircle, documentText, home, images, logIn } from 'ionicons/icons';
+import { add, arrowUndoCircle, camera, checkmarkCircle, documentText, eye, home, images, close, logIn, menu, trash, exit } from 'ionicons/icons';
 import { Auth } from './auth/services/auth.service';
-
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -16,13 +16,14 @@ import { Auth } from './auth/services/auth.service';
 export class AppComponent {
   #authService = inject(Auth);
   #platform = inject(Platform);
+  #navController = inject(NavController);
 
   userResource = this.#authService.getProfile();
   user = computed(() => this.userResource.hasValue() ? this.userResource.value().user : null);
 
   public appPages = [{ title: 'Home', url: '/products', icon: 'home' }];
   constructor() {
-    addIcons({ home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, });
+    addIcons({ home, menu, exit, add, trash, eye, close, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, });
     this.initializeApp();
   }
 
@@ -31,5 +32,10 @@ export class AppComponent {
       await this.#platform.ready();
       SplashScreen.hide();
     }
+  }
+
+  async logout() {
+    await this.#authService.logout();
+    this.#navController.navigateRoot(['/auth/login']);
   }
 }

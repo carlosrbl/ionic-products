@@ -18,6 +18,7 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { Auth } from '../services/auth.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -48,11 +49,11 @@ export class LoginPage {
 
   #authService = inject(Auth);
   #alertCtrl = inject(AlertController);
-  // #navCtrl = inject(NavController);
+  #navCtrl = inject(NavController);
 
   login() {
     this.#authService.login(this.email, this.password).subscribe({
-      // next: () => this.#navCtrl.navigateRoot(['/products']),
+      next: () => this.#navCtrl.navigateRoot(['/products']),
       error: async (error) => {
         (
           await this.#alertCtrl.create({
