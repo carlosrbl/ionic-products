@@ -28,7 +28,6 @@ import {
   NavController,
   ToastController,
 } from '@ionic/angular/standalone';
-import { ValueEquals } from 'src/app/validators/value-equals';
 import { Auth } from '../services/auth.service';
 
 @Component({

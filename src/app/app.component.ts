@@ -1,9 +1,38 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { IonApp, IonAvatar, IonContent, IonIcon, IonImg, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterLink, IonRouterOutlet, IonSplitPane, Platform } from '@ionic/angular/standalone';
+import {
+  IonApp,
+  IonAvatar,
+  IonContent,
+  IonIcon,
+  IonImg,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonMenu,
+  IonMenuToggle,
+  IonRouterLink,
+  IonRouterOutlet,
+  IonSplitPane,
+  Platform,
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { add, arrowUndoCircle, camera, checkmarkCircle, documentText, eye, home, images, close, logIn, menu, trash, exit } from 'ionicons/icons';
+import {
+  add,
+  arrowUndoCircle,
+  camera,
+  checkmarkCircle,
+  documentText,
+  eye,
+  home,
+  images,
+  close,
+  logIn,
+  menu,
+  trash,
+  exit,
+} from 'ionicons/icons';
 import { Auth } from './auth/services/auth.service';
 import { NavController } from '@ionic/angular';
 
@@ -11,7 +40,23 @@ import { NavController } from '@ionic/angular';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
-  imports: [RouterLink, RouterLinkActive, IonRouterLink, IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonAvatar, IonImg],
+  imports: [
+    RouterLink,
+    RouterLinkActive,
+    IonRouterLink,
+    IonApp,
+    IonSplitPane,
+    IonMenu,
+    IonContent,
+    IonList,
+    IonMenuToggle,
+    IonItem,
+    IonIcon,
+    IonLabel,
+    IonRouterOutlet,
+    IonAvatar,
+    IonImg,
+  ],
 })
 export class AppComponent {
   #authService = inject(Auth);
@@ -19,11 +64,30 @@ export class AppComponent {
   #navController = inject(NavController);
 
   userResource = this.#authService.getProfile();
-  user = computed(() => this.userResource.hasValue() ? this.userResource.value().user : null);
+  user = computed(() =>
+    this.userResource.hasValue() ? this.userResource.value().user : null,
+  );
 
-  public appPages = [{ title: 'Home', url: '/products', icon: 'home' }];
+  public appPages = [
+    { title: 'Home', url: '/products', icon: 'home' },
+    { title: 'Add product', url: '/products/add', icon: 'add' },
+  ];
   constructor() {
-    addIcons({ home, menu, exit, add, trash, eye, close, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, });
+    addIcons({
+      home,
+      menu,
+      exit,
+      add,
+      trash,
+      eye,
+      close,
+      logIn,
+      documentText,
+      checkmarkCircle,
+      images,
+      camera,
+      arrowUndoCircle,
+    });
     this.initializeApp();
   }
 
