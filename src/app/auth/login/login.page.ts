@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { form, FormField, required } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import {
   AlertController,
   IonButton,
@@ -18,7 +19,6 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { Auth } from '../services/auth.service';
-import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +26,7 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
-    FormsModule,
+    FormField,
     RouterLink,
     IonRouterLink,
     IonHeader,
@@ -44,25 +44,35 @@ import { NavController } from '@ionic/angular';
   ],
 })
 export class LoginPage {
-  email = '';
-  password = '';
+  userModel = signal({
+    email: '',
+    password: '',
+  });
+
+  userForm = form(this.userModel, (schema) => {
+    required(schema.email);
+    required(schema.password);
+  });
 
   #authService = inject(Auth);
   #alertCtrl = inject(AlertController);
   #navCtrl = inject(NavController);
 
-  login() {
-    this.#authService.login(this.email, this.password).subscribe({
-      next: () => this.#navCtrl.navigateRoot(['/products']),
-      error: async (error) => {
-        (
-          await this.#alertCtrl.create({
-            header: 'Login error',
-            message: 'Incorrect email and/or password',
-            buttons: ['Ok'],
-          })
-        ).present();
-      },
-    });
+  login(event: Event) {
+    event.preventDefault();
+    this.#authService
+      .login(this.userModel().email, this.userModel().password)
+      .subscribe({
+        next: () => this.#navCtrl.navigateRoot(['/products']),
+        error: async (error) => {
+          (
+            await this.#alertCtrl.create({
+              header: 'Login error',
+              message: 'Incorrect email and/or password',
+              buttons: ['Ok'],
+            })
+          ).present();
+        },
+      });
   }
 }

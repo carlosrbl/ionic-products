@@ -25,11 +25,11 @@
       </ion-item>
       <ion-item>
         <ion-label position="inset">Photo</ion-label>
-        <ion-button color="secondary" (click)="takePhoto()">
+        <ion-button type="button" color="secondary" (click)="takePhoto()">
           <ion-icon name="camera" slot="start"></ion-icon>
           Camera
         </ion-button>
-        <ion-button color="tertiary" (click)="pickFromGallery()">
+        <ion-button type="button" color="tertiary" (click)="pickFromGallery()">
           <ion-icon name="images" slot="start"></ion-icon>
           Gallery
         </ion-button>
@@ -47,7 +47,7 @@
           </ion-button>
         </ion-col>
         <ion-col>
-          <ion-button color="danger" expand="block" fill="outline" [routerLink]="['/products']"
+          <ion-button type="button" color="danger" expand="block" fill="outline" [routerLink]="['/products']"
             [routerDirection]="'root'">
             <ion-icon name="arrow-undo-circle" slot="start"></ion-icon>
             Cancel

@@ -32,6 +32,8 @@ import {
   menu,
   trash,
   exit,
+  informationCircle,
+  chatboxEllipses,
 } from 'ionicons/icons';
 import { Auth } from './auth/services/auth.service';
 import { NavController } from '@ionic/angular';
@@ -87,6 +89,8 @@ export class AppComponent {
       images,
       camera,
       arrowUndoCircle,
+      informationCircle,
+      chatboxEllipses,
     });
     this.initializeApp();
   }

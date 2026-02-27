@@ -73,6 +73,7 @@ export class ProductFormPage {
   #changeDetector = inject(ChangeDetectorRef);
 
   addProduct(event: Event) {
+    event.preventDefault();
     this.#productsService.addProduct(this.productModel()).subscribe({
       next: async (prod) => {
         (

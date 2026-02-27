@@ -91,6 +91,7 @@ export class RegisterPage {
   #changeDetector = inject(ChangeDetectorRef);
 
   register(event: Event) {
+    event.preventDefault();
     this.#authService.register(this.userModel()).subscribe(async () => {
       (
         await this.#toastCtrl.create({
